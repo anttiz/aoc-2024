@@ -1,8 +1,10 @@
 module Main where
 
-import Day1Part2 (result1Part2)
 import Day1 (result1)
+import Day1Part2 (result1Part2)
 import Day2 (result2, result2Part2)
+import Day3 (result3)
+
 main :: IO ()
 main = do
   putStrLn "Day 1"
@@ -13,3 +15,5 @@ main = do
   result2
   putStrLn "Day 2 Part 2"
   result2Part2
+  putStrLn "Day 3"
+  result3
