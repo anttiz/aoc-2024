@@ -2,7 +2,7 @@ module Day5 where
 
 import qualified Data.Map as Map
 import Data.List.Split (splitOn)
-import Data.List (elemIndex, sortBy)
+import Data.List (sortBy)
 import Data.Function (on)
 -- Define a type for the rules
 type RulesMap = Map.Map Int [Int]
@@ -12,10 +12,13 @@ parseRules :: [String] -> RulesMap
 parseRules = foldr insertRule Map.empty
   where
     insertRule rule acc =
-      let [keyStr, valueStr] = splitOn "|" rule
-          key = read keyStr :: Int
-          value = read valueStr :: Int
-      in Map.insertWith (++) key [value] acc
+      let parts = splitOn "|" rule
+      in case parts of
+          [keyStr, valueStr] ->
+              let key = read keyStr :: Int
+                  value = read valueStr :: Int
+              in Map.insertWith (++) key [value] acc
+          _ -> acc
 
 getMiddle :: [Int] -> Int
 getMiddle xs = xs !! (length xs `div` 2)
