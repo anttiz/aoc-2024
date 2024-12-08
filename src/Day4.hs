@@ -64,41 +64,33 @@ countInXShape target xss i j
   | isXShape target xss i j = 1
   | otherwise = 0
 
-isXShape1 :: String -> [String] -> Int -> Int -> Bool
-isXShape1 target xss i j =
-                    (getCharAtPosition xss i j == target !! 1) &&
-                    (getCharAtPosition xss (i-1) (j-1) == head target) &&
-                    (getCharAtPosition xss (i+1) (j-1) == last target) &&
-                    (getCharAtPosition xss (i-1) (j+1) == head target) &&
-                    (getCharAtPosition xss (i+1) (j+1) == last target)
-
-isXShape2 :: String -> [String] -> Int -> Int -> Bool
-isXShape2 target xss i j =
-                    (getCharAtPosition xss i j == target !! 1) &&
-                    (getCharAtPosition xss (i-1) (j-1) == head target) &&
-                    (getCharAtPosition xss (i+1) (j-1) == head target) &&
-                    (getCharAtPosition xss (i-1) (j+1) == last target) &&
-                    (getCharAtPosition xss (i+1) (j+1) == last target)
-
-isXShape3 :: String -> [String] -> Int -> Int -> Bool
-isXShape3 target xss i j =
-                    (getCharAtPosition xss i j == target !! 1) &&
-                    (getCharAtPosition xss (i-1) (j-1) == last target) &&
-                    (getCharAtPosition xss (i+1) (j-1) == last target) &&
-                    (getCharAtPosition xss (i-1) (j+1) == head target) &&
-                    (getCharAtPosition xss (i+1) (j+1) == head target)
-
-isXShape4 :: String -> [String] -> Int -> Int -> Bool
-isXShape4 target xss i j =
-                    (getCharAtPosition xss i j == target !! 1) &&
-                    (getCharAtPosition xss (i-1) (j-1) == last target) &&
-                    (getCharAtPosition xss (i+1) (j-1) == head target) &&
-                    (getCharAtPosition xss (i-1) (j+1) == last target) &&
-                    (getCharAtPosition xss (i+1) (j+1) == head target)
-
 isXShape :: String -> [String] -> Int -> Int -> Bool
-isXShape target xss i j = all (isValidIndex xss) [(i, j), (i-1, j-1), (i+1, j-1), (i-1, j+1), (i+1, j+1)] &&
-                    (length target == 3) && (isXShape1 target xss i j || isXShape2 target xss i j || isXShape3 target xss i j || isXShape4 target xss i j)
+isXShape target xss i j = all (isValidIndex xss) positions &&
+                           length target == 3 &&
+                           any ($ (xss, i, j)) shapeChecks
+  where
+    positions = [(i, j), (i-1, j-1), (i+1, j-1), (i-1, j+1), (i+1, j+1)]
+    shapeChecks = [checkShape1, checkShape2, checkShape3, checkShape4]
+    checkShape1 (xss, i, j) = (getCharAtPosition xss i j == target !! 1) &&
+                               (getCharAtPosition xss (i-1) (j-1) == head target) &&
+                               (getCharAtPosition xss (i+1) (j-1) == last target) &&
+                               (getCharAtPosition xss (i-1) (j+1) == head target) &&
+                               (getCharAtPosition xss (i+1) (j+1) == last target)
+    checkShape2 (xss, i, j) = (getCharAtPosition xss i j == target !! 1) &&
+                               (getCharAtPosition xss (i-1) (j-1) == head target) &&
+                               (getCharAtPosition xss (i+1) (j-1) == head target) &&
+                               (getCharAtPosition xss (i-1) (j+1) == last target) &&
+                               (getCharAtPosition xss (i+1) (j+1) == last target)
+    checkShape3 (xss, i, j) = (getCharAtPosition xss i j == target !! 1) &&
+                               (getCharAtPosition xss (i-1) (j-1) == last target) &&
+                               (getCharAtPosition xss (i+1) (j-1) == last target) &&
+                               (getCharAtPosition xss (i-1) (j+1) == head target) &&
+                               (getCharAtPosition xss (i+1) (j+1) == head target)
+    checkShape4 (xss, i, j) = (getCharAtPosition xss i j == target !! 1) &&
+                               (getCharAtPosition xss (i-1) (j-1) == last target) &&
+                               (getCharAtPosition xss (i+1) (j-1) == head target) &&
+                               (getCharAtPosition xss (i-1) (j+1) == last target) &&
+                               (getCharAtPosition xss (i+1) (j+1) == head target)
 
 getCharAtPosition :: [String] -> Int -> Int -> Char
 getCharAtPosition xss i j
@@ -115,10 +107,10 @@ result4Part2 = do
   let result = calcResultXShape "MAS" linesRead
   putStrLn $ "Result: " ++ show result
 
-  let contentTest = ".M.S......\n..A..MSMS.\n.M.S.MAA..\n..A.ASMSM.\n.M.S.M....\n..........\nS.S.S.S.S.\n.A.A.A.A..\nM.M.M.M.M.\n.........."
-  let linesReadTest = lines contentTest
-  let resultTest = calcResultXShape "MAS" linesReadTest
-  putStrLn $ "Result: " ++ show resultTest
+  -- let contentTest = ".M.S......\n..A..MSMS.\n.M.S.MAA..\n..A.ASMSM.\n.M.S.M....\n..........\nS.S.S.S.S.\n.A.A.A.A..\nM.M.M.M.M.\n.........."
+  -- let linesReadTest = lines contentTest
+  -- let resultTest = calcResultXShape "MAS" linesReadTest
+  -- putStrLn $ "Result: " ++ show resultTest
 
   -- let linesReadTest = ["mbs", "bab", "mbs"]
   -- let resultTest = calcResultXShape "mas" linesReadTest
